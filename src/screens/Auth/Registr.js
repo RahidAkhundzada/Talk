@@ -84,7 +84,6 @@ const Registr = ({navigation}) => {
         Name: `${Name}`,
         surName: `${surName}`,
       });
-    // const key = ref.key;
   };
 
   return (

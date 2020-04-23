@@ -15,11 +15,6 @@ const hh = Dimensions.get('window').height;
 var User;
 firebase.auth().onAuthStateChanged(function(user) {
   User = user;
-  if ((user.displayName = null)) {
-    user.updateProfile({
-      displayName: user.email,
-    });
-  }
 });
 
 const Profile = () => {

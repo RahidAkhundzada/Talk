@@ -6,11 +6,8 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import firebase from 'firebase';
 import {Keyboard} from 'react-native';
@@ -46,11 +43,6 @@ const Login = ({navigation}) => {
   };
   const createUser = () => {
     navigation.navigate('Registr');
-    // firebase
-    //   .auth()
-    //   .createUserWithEmailAndPassword(email, password)
-    //   .then(() => alert('Account succefully created'))
-    //   .catch(() => alert('This user is already registred'));
   };
   const passwordForgot = () => {
     firebase

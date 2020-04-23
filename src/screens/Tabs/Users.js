@@ -9,11 +9,13 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StyleSheet,
+  Button,
 } from 'react-native';
-
 import firebase from 'firebase';
+
+
 const user = firebase.auth().currentUser;
-console.log(user);
+
 const Users = ({navigation}) => {
   const [data, setData] = useState([]);
   const [email, setEmail] = useState(null);
@@ -22,7 +24,9 @@ const Users = ({navigation}) => {
   const [dataSource, setdataSource] = useState([]);
   const [text, setText] = useState('');
   const flatList = useRef(null);
-  
+
+
+
   useEffect(() => {
     var DATA = [];
     var DATA2 = [];
@@ -71,6 +75,7 @@ const Users = ({navigation}) => {
         underlineColorAndroid="transparent"
         placeholder="Search Here"
       />
+
       <FlatList
         data={dataSource}
         ref={flatList}

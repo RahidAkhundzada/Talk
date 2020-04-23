@@ -13,7 +13,9 @@ import {
 import firebase from 'firebase';
 var userPhoto;
 firebase.auth().onAuthStateChanged(function(user) {
-  userPhoto = user.photoURL;
+  if (user) {
+    userPhoto = user.photoURL;
+  }
 });
 
 import {NavigationContainer} from '@react-navigation/native';
@@ -138,7 +140,7 @@ function TabNavigator() {
         name="HomeScreen"
         component={HomeScreen}
         options={() => ({
-          headerShown: true,
+          headerShown: false,
           headerRight: () => (
             <Button
               onPress={() => alert('This is a button!')}
@@ -161,7 +163,9 @@ const App = () => {
           <StackApp.Screen
             name="DrawerNavigation"
             component={DrawerNavigation}
-            options={() => ({headerShown: false})}
+            options={() => ({
+              headerShown: false,
+            })}
           />
           <StackApp.Screen
             name="Login"
