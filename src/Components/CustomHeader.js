@@ -1,5 +1,12 @@
 import * as React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
+import firebase from 'firebase';
+var userPhoto;
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    userPhoto = user.photoURL;
+  }
+});
 
 const CustomHeader = ({title, isHome, navigation, img}) => {
   return (
@@ -10,7 +17,7 @@ const CustomHeader = ({title, isHome, navigation, img}) => {
           style={{flex: 1, justifyContent: 'center'}}>
           <Image
             style={{width: 30, height: 30, marginLeft: 5}}
-            source={require('./Images/menu.png')}
+            source={require('../Images/menu.png')}
             resizeMode="contain"
           />
         </TouchableOpacity>
@@ -20,14 +27,16 @@ const CustomHeader = ({title, isHome, navigation, img}) => {
           style={{flexDirection: 'row', alignItems: 'center'}}>
           <Image
             style={{width: 25, height: 25, marginLeft: 5}}
-            source={require('./Images/previous.png')}
+            source={require('../Images/previous.png')}
             resizeMode="contain"
           />
           <Text>Back</Text>
         </TouchableOpacity>
       )}
       <View style={{flex: 1.5, height: 50, justifyContent: 'center'}}>
-        <Text style={{textAlign: 'center'}}>{title}</Text>
+        <Text style={{fontWeight: 'bold', fontSize: 22,textAlign: 'center'}}>
+          {title}
+        </Text>
       </View>
       <View style={{flex: 1}} />
 
@@ -37,7 +46,7 @@ const CustomHeader = ({title, isHome, navigation, img}) => {
           onPress={() => navigation.navigate('Profile')}>
           <Image
             style={{width: 40, height: 40, marginLeft: 40, borderRadius: 20}}
-            source={img}
+            source={{uri: userPhoto}}
           />
         </TouchableOpacity>
       ) : null}

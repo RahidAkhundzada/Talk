@@ -26,23 +26,39 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import Login from './src/screens/Auth/Login';
 import Registr from './src/screens/Auth/Registr';
 import HomeScreen from './src/screens/Tabs/HomeScreen';
-import HomeDetail from './src/screens/Tabs/HomeDetail';
+import HomeDetail from './src/screens/Drawers/HomeDetail';
 import Users from './src/screens/Tabs/Users';
-import SettingDetail from './src/screens/Tabs/SettingDetail';
+import Note from './src/screens/Drawers/Note';
 import GeneralChat from './src/screens/Drawers/GeneralChat';
 import ChatPage from './src/screens/ChatPage';
 import Profile from './src/screens/Drawers/Profile';
 import MovieSearch from './src/screens/Drawers/MovieSearch';
 import Calc from './src/screens/Drawers/Calc';
+import AddNote from './src/screens/AddNote';
+
 const StackApp = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
+const StackNote = createStackNavigator();
+
+function StackNoteApp() {
+  return (
+    <StackNote.Navigator>
+      <StackNote.Screen
+        name="Note"
+        component={Note}
+        options={{headerShown: false}}
+      />
+      <StackNote.Screen name="Add Note" component={AddNote} />
+    </StackNote.Navigator>
+  );
+}
 
 function DrawerNavigation() {
   return (
     <Drawer.Navigator drawerContent={props => CustomDrawerContent(props)}>
       <Drawer.Screen name="Home" component={TabNavigator} />
-      <Drawer.Screen name="SettingDetail" component={SettingDetail} />
+      <Drawer.Screen name="Note" component={StackNoteApp} />
       <Drawer.Screen name="HomeDetail" component={HomeDetail} />
       <Drawer.Screen name="GeneralChat" component={GeneralChat} />
       <Drawer.Screen name="ChatPage" component={ChatPage} />
@@ -75,8 +91,8 @@ function CustomDrawerContent(props) {
         <Text style={{marginTop: 20, color: 'red'}}>Pages</Text>
         <TouchableOpacity
           style={{marginTop: 10}}
-          onPress={() => props.navigation.navigate('SettingDetail')}>
-          <Text>SettingDetail</Text>
+          onPress={() => props.navigation.navigate('Note')}>
+          <Text>Notepad</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{marginTop: 20}}

@@ -12,7 +12,7 @@ import {
   Button,
 } from 'react-native';
 import firebase from 'firebase';
-
+import CustomHeader from '../../Components/CustomHeader';
 
 const user = firebase.auth().currentUser;
 
@@ -24,8 +24,6 @@ const Users = ({navigation}) => {
   const [dataSource, setdataSource] = useState([]);
   const [text, setText] = useState('');
   const flatList = useRef(null);
-
-
 
   useEffect(() => {
     var DATA = [];
@@ -68,6 +66,7 @@ const Users = ({navigation}) => {
 
   return (
     <SafeAreaView>
+      <CustomHeader isHome="false" title="Users" navigation={navigation} />
       <TextInput
         style={styles.textInputStyle}
         onChangeText={text => SearchbyName(text)}

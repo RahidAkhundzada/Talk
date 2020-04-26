@@ -1,18 +1,21 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {connect} from 'react-redux';
+import {Calculate, Calculate1} from '../../Redux/Action/ActionCalc';
+import CustomHeader from '../../Components/CustomHeader';
 
-export default class Calc extends Component {
+class Calc extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      operateText: '',
-      resultText: '',
-    };
   }
 
   buttonPressed(par) {
-    const lastCaracter = this.state.operateText.split('').pop();
-    let dot = true;
+    // console.log(this.props.text1); ///operate text
+    // console.log(this.props.text2); ///result text
+    // this.props.Calculate('3'); ///operate yaz
+    // this.props.Calculate1('6'); ///resulati yaz
+
+    const lastCaracter = this.props.text1.split('').pop();
 
     if (par === '=') {
       switch (lastCaracter) {
@@ -20,28 +23,20 @@ export default class Calc extends Component {
         case '-':
         case '*':
         case '/':
-          const text = this.state.operateText.split('');
+          const text = this.props.text1.split('');
           text.pop();
-          this.setState({
-            operateText: text.join(''),
-            resultText: eval(text.join('')),
-          });
+          this.props.Calculate(text.join(''));
+          this.props.Calculate1(eval(text.join('')));
           break;
       }
-      this.setState({
-        resultText: eval(this.state.operateText),
-      });
+      this.props.Calculate1(eval(this.props.text1));
     } else if (par === 'C') {
-      this.setState({
-        operateText: '',
-        resultText: '',
-      });
+      this.props.Calculate('');
+      this.props.Calculate1('');
     } else if (par === '<') {
-      const text = this.state.operateText.split('');
+      const text = this.props.text1.split('');
       text.pop();
-      this.setState({
-        operateText: text.join(''),
-      });
+      this.props.Calculate(text.join(''));
     } else if (
       (par === '+' || par === '-' || par === '*' || par === '/') &&
       (lastCaracter === '+' ||
@@ -51,19 +46,15 @@ export default class Calc extends Component {
     ) {
       const text = this.state.operateText.split('');
       text.pop();
-      this.setState({
-        operateText: text.join('') + par,
-      });
+      this.props.Calculate(text.join('') + par);
     } else {
-      this.setState({
-        operateText: this.state.operateText + par,
-      });
+      this.props.Calculate(this.props.text1 + par);
     }
   }
 
   render() {
     let numbers = [
-      ['C', '()', '%'],
+      ['C', '%', ''],
       [7, 8, 9],
       [4, 5, 6],
       [1, 2, 3],
@@ -100,12 +91,13 @@ export default class Calc extends Component {
 
     return (
       <View style={styles.container}>
+        <CustomHeader title="Calculator" navigation={this.props.navigation} />
         <View style={styles.operateScreen}>
-          <Text style={styles.operateText}>{this.state.operateText}</Text>
+          <Text style={styles.operateText}>{this.props.text1}</Text>
         </View>
 
         <View style={styles.resultScreen}>
-          <Text style={styles.resultText}>{this.state.resultText}</Text>
+          <Text style={styles.resultText}>{this.props.text2}</Text>
         </View>
 
         <View style={styles.btnsStyle}>
@@ -116,6 +108,29 @@ export default class Calc extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    text1: state.Calc.operateText,
+    text2: state.Calc.resultText,
+    dot: state.Calc.dot,
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    Calculate: value => {
+      dispatch(Calculate(value));
+    },
+    Calculate1: value => {
+      dispatch(Calculate1(value));
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Calc);
 
 const styles = StyleSheet.create({
   container: {

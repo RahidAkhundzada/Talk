@@ -11,42 +11,35 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-//import Header from '../components/Header';
+import {connect} from 'react-redux';
+import {AData, AText, AUrl} from '../../Redux/Action/ActionMovie';
 const ww = Dimensions.get('window').width;
 const hh = Dimensions.get('window').height;
 
-export default class MovieSearch extends Component {
+class MovieSearch extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      data: [],
-      text: '',
-      url: 'http://api.tvmaze.com/search/shows?q=',
-    };
   }
 
   textChanged = text => {
-    this.setState({text});
+    this.props.AText(text);
+    console.log(this.props.text);
   };
 
   Search = async () => {
     Keyboard.dismiss();
-    this.setState({
-      data: [],
-      text: '',
-    });
-    const response = await fetch(this.state.url + this.state.text);
+    this.props.AData([]);
+    this.props.AText('');
+
+    const response = await fetch(this.props.url + this.props.text);
     var data = await response.json();
-    this.setState({
-      data,
-    });
+    this.props.AData(data);
   };
 
   onFocus() {
-    this.setState({
-      text: '',
-    });
+    AText('');
   }
+
   imageView(par) {
     try {
       return {uri: par.medium};
@@ -67,7 +60,7 @@ export default class MovieSearch extends Component {
               onFocus={() => this.onFocus()}
               style={styles.inputStyle}
               onChangeText={text => this.textChanged(text)}
-              value={this.state.text}
+              value={this.props.text}
             />
             <TouchableOpacity onPress={() => this.Search()}>
               <Image
@@ -79,7 +72,7 @@ export default class MovieSearch extends Component {
         </View>
 
         <FlatList
-          data={this.state.data}
+          data={this.props.data}
           contentContainerStyle={{paddingBottom: 100}}
           keyExtractor={item => item.index}
           renderItem={({item, index}) => (
@@ -108,6 +101,34 @@ export default class MovieSearch extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    data: state.Movie.data,
+    text: state.Movie.text,
+    url: state.Movie.url,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    AData: value => {
+      dispatch(AData(value));
+    },
+    AText: value => {
+      dispatch(AText(value));
+    },
+    AUrl: value => {
+      dispatch(AUrl(value));
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(MovieSearch);
+
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',

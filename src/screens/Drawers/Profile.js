@@ -9,15 +9,14 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import firebase from 'firebase';
-import CustomHeader from '../..//CustomHeader';
+import CustomHeader from '../../Components/CustomHeader';
 const ww = Dimensions.get('window').width;
 const hh = Dimensions.get('window').height;
-var User;
-firebase.auth().onAuthStateChanged(function(user) {
+var User = firebase.auth().onAuthStateChanged(function(user) {
   User = user;
 });
 
-const Profile = () => {
+const Profile = ({navigation}) => {
   const [Name, setName] = useState(User.displayName);
   const [photo, setPhoto] = useState(User.photoURL);
   const [email, setEmail] = useState(User.email);
@@ -30,8 +29,7 @@ const Profile = () => {
   const UpdateProfile = () => {
     User.updateProfile({
       displayName: Name,
-      photoURL:
-        'https://scontent.fgyd3-1.fna.fbcdn.net/v/t1.0-9/94042455_1463285933849532_7228233915385774080_n.jpg?_nc_cat=109&_nc_sid=ca434c&_nc_ohc=iGldBDAzHOMAX8KpvI3&_nc_ht=scontent.fgyd3-1.fna&oh=bd2c9abb0bfa8c82d7b6ecbfd909a7b9&oe=5EC56A33',
+      photoURL: photo,
     })
       .then(function() {
         alert('Update successful.');
@@ -43,7 +41,7 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
-      <CustomHeader title={email} />
+      <CustomHeader title={email} navigation={navigation} />
       <View>
         <Image
           source={{uri: photo}}
