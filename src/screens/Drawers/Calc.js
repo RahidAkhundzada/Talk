@@ -44,7 +44,7 @@ class Calc extends Component {
         lastCaracter === '*' ||
         lastCaracter === '/')
     ) {
-      const text = this.state.operateText.split('');
+      const text = this.props.text1.split('');
       text.pop();
       this.props.Calculate(text.join('') + par);
     } else {
