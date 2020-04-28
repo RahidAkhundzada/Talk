@@ -1,12 +1,6 @@
 import * as React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
 import firebase from 'firebase';
-var userPhoto;
-firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    userPhoto = user.photoURL;
-  }
-});
 
 const CustomHeader = ({title, isHome, navigation, img}) => {
   return (
@@ -46,7 +40,7 @@ const CustomHeader = ({title, isHome, navigation, img}) => {
           onPress={() => navigation.navigate('Profile')}>
           <Image
             style={{width: 40, height: 40, marginLeft: 40, borderRadius: 20}}
-            source={{uri: userPhoto}}
+            source={img}
           />
         </TouchableOpacity>
       ) : null}

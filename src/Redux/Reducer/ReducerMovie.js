@@ -4,7 +4,7 @@ const MOV3 = 'MOV3';
 
 const initialState = {
   data: [],
-  text: 'a',
+  text: '',
   url: 'http://api.tvmaze.com/search/shows?q=',
 };
 

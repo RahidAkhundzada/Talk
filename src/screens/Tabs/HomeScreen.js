@@ -4,11 +4,19 @@ import CustomHeader from '../../Components/CustomHeader';
 //import {user} from '../../Extra/UserData';
 import firebase from 'firebase';
 const user = firebase.auth().currentUser;
+
+var userPhoto;
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    userPhoto = user.photoURL;
+  }
+});
+
 const HomeScreen = ({navigation}) => {
 
   const imageView = () => {
     try {
-      return {uri: user.photoURL};
+      return {uri: userPhoto};
     } catch (error) {
       return require('../../Images/user1.png');
     }

@@ -61,6 +61,7 @@ const Users = ({navigation}) => {
 
   const TalkOnetoOne = () => {
     const result = data.find(({Email}) => Email === email);
+    result.set = user.photoURL;
     console.log(result);
   };
 
@@ -74,7 +75,7 @@ const Users = ({navigation}) => {
         underlineColorAndroid="transparent"
         placeholder="Search Here"
       />
-
+      <Button title="ok" onPress={() => TalkOnetoOne()} />
       <FlatList
         data={dataSource}
         ref={flatList}

@@ -35,6 +35,7 @@ import Profile from './src/screens/Drawers/Profile';
 import MovieSearch from './src/screens/Drawers/MovieSearch';
 import Calc from './src/screens/Drawers/Calc';
 import AddNote from './src/screens/AddNote';
+import NoteFullView from './src/screens/NoteFullView';
 
 const StackApp = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -50,6 +51,7 @@ function StackNoteApp() {
         options={{headerShown: false}}
       />
       <StackNote.Screen name="Add Note" component={AddNote} />
+      <StackNote.Screen name="NoteFullView" component={NoteFullView} />
     </StackNote.Navigator>
   );
 }
