@@ -1,50 +1,45 @@
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
-  TextInput,
   View,
-  Button,
   TouchableOpacity,
   Image,
   FlatList,
-  Text,
 } from 'react-native';
 import firebase from 'firebase';
+import {connect} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 import CustomHeader from '../../Components/CustomHeader';
 import NoteView from '../../Components/NoteView';
+import {NoteData} from '../../Redux/Action/ActionNote';
 
-const Note = ({navigation}) => {
-  const [data, setData] = useState([]);
-  const [data2, setData2] = useState([]);
-
+const Note = props => {
+  const navigation = useNavigation();
   useEffect(() => {
     var user = firebase.auth().currentUser;
     var DATA = [];
-    var DATA2 = [];
     var UseriD = user.uid;
     firebase
       .database()
       .ref('Note/' + UseriD)
       .once('value')
       .then(function(snapshot) {
-        DATA2.push(snapshot);
         snapshot.forEach(function(childSnapshot) {
           var childSnap = childSnapshot.val();
           DATA.push(childSnap);
         });
-      })
-      .then(function() {
-        setData(DATA);
-        setData2(DATA2);
       });
-  }, [data]);
+    setTimeout(() => {
+      props.NoteData(DATA.reverse());
+    }, 1000);
+  }, [props]);
 
   return (
     <View style={styles.container}>
       <CustomHeader title="Note +" navigation={navigation} />
       <View style={{flex: 7}}>
         <FlatList
-          data={data}
+          data={props.ListNote}
           renderItem={({item, index}) => (
             <NoteView item={item} navigation={navigation} />
           )}
@@ -54,7 +49,9 @@ const Note = ({navigation}) => {
       <View style={styles.BtnStyle}>
         <TouchableOpacity
           style={styles.btnPlus}
-          onPress={() => navigation.navigate('Add Note')}>
+          onPress={() => {
+            navigation.navigate('Add Note');
+          }}>
           <Image source={require('../../Images/plus.png')} />
         </TouchableOpacity>
       </View>
@@ -78,4 +75,21 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Note;
+const mapStateToProps = state => {
+  return {
+    ListNote: state.Note.data,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    NoteData: value => {
+      dispatch(NoteData(value));
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Note);

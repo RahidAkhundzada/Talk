@@ -23,7 +23,6 @@ class MovieSearch extends Component {
 
   textChanged = text => {
     this.props.AText(text);
-    console.log(this.props.text);
   };
 
   Search = async () => {

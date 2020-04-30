@@ -5,14 +5,17 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
+  TouchableHighlight,
 } from 'react-native';
+
 const ww = Dimensions.get('window').width;
 const hh = Dimensions.get('window').height;
 
 const NoteView = ({item, navigation}) => {
   return (
-    <TouchableOpacity
-      onPress={() => navigation.navigate('NoteFullView', {item: item})}>
+    <TouchableHighlight
+      onPress={() => navigation.navigate('NoteFullView', {item: item})}
+      underlayColor="orange">
       <View style={styles.container}>
         <View style={styles.stylTitle}>
           <Text style={styles.titleText}>{item.Title}</Text>
@@ -27,7 +30,7 @@ const NoteView = ({item, navigation}) => {
           </Text>
         </View>
       </View>
-    </TouchableOpacity>
+    </TouchableHighlight>
   );
 };
 
