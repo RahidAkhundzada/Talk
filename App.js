@@ -1,7 +1,6 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {
   View,
-  StyleSheet,
   Image,
   TouchableOpacity,
   SafeAreaView,
@@ -10,13 +9,17 @@ import {
   Button,
 } from 'react-native';
 
-import firebase from 'firebase';
-var userPhoto;
-firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    userPhoto = user.photoURL;
+import {connect} from 'react-redux';
+import {USER} from './src/Extra/UserData';
+
+let imageView = () => {
+  try {
+    return {uri: USER.photoURL};
+  } catch (error) {
+    return require('./src/Images/user1.png');
   }
-});
+};
+
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -36,11 +39,13 @@ import MovieSearch from './src/screens/Drawers/MovieSearch';
 import Calc from './src/screens/Drawers/Calc';
 import AddNote from './src/screens/AddNote';
 import NoteFullView from './src/screens/NoteFullView';
+import Logout from './src/screens/Drawers/Logout';
 
 const StackApp = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 const StackNote = createStackNavigator();
+const StackLogin = createStackNavigator();
 
 function StackNoteApp() {
   return (
@@ -56,6 +61,23 @@ function StackNoteApp() {
   );
 }
 
+function LoginStack() {
+  return (
+    <StackLogin.Navigator>
+      <StackLogin.Screen
+        name="Login"
+        component={Login}
+        options={() => ({headerShown: false})}
+      />
+      <StackLogin.Screen
+        name="Registr"
+        component={Registr}
+        options={() => ({headerShown: false})}
+      />
+    </StackLogin.Navigator>
+  );
+}
+
 function DrawerNavigation() {
   return (
     <Drawer.Navigator drawerContent={props => CustomDrawerContent(props)}>
@@ -67,16 +89,17 @@ function DrawerNavigation() {
       <Drawer.Screen name="MovieSearch" component={MovieSearch} />
       <Drawer.Screen name="Calc" component={Calc} />
       <Drawer.Screen name="Profile" component={Profile} />
-      <Drawer.Screen name="Exit" component={Login} />
+      <Drawer.Screen name="Exit" component={Logout} />
     </Drawer.Navigator>
   );
 }
+
 function CustomDrawerContent(props) {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={{margin: 5, alignItems: 'center'}}>
         <Image
-          source={{uri: userPhoto}}
+          source={imageView()}
           style={{height: 70, width: 70, borderRadius: 35}}
         />
       </View>
@@ -123,7 +146,7 @@ function CustomDrawerContent(props) {
         </TouchableOpacity>
         <TouchableOpacity
           style={{marginTop: 20}}
-          onPress={() => props.navigation.navigate('Login')}>
+          onPress={() => props.navigation.navigate('Exit')}>
           <Text>Exit</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -173,38 +196,38 @@ function TabNavigator() {
   );
 }
 
-const App = () => {
-  return (
-    <View style={styles.container}>
-      <NavigationContainer>
-        <StackApp.Navigator initialRouteName="Login">
-          <StackApp.Screen
-            name="DrawerNavigation"
-            component={DrawerNavigation}
-            options={() => ({
-              headerShown: false,
-            })}
-          />
-          <StackApp.Screen
-            name="Login"
-            component={Login}
-            options={() => ({headerShown: false})}
-          />
-          <StackApp.Screen
-            name="Registr"
-            component={Registr}
-            options={() => ({headerShown: false})}
-          />
-        </StackApp.Navigator>
-      </NavigationContainer>
-    </View>
+const App = props => {
+  return props.isLogged ? (
+    <NavigationContainer>
+      <StackApp.Navigator>
+        <StackApp.Screen
+          name="DrawerNavigation"
+          component={DrawerNavigation}
+          options={() => ({
+            headerShown: false,
+          })}
+        />
+      </StackApp.Navigator>
+    </NavigationContainer>
+  ) : (
+    <NavigationContainer>
+      <StackApp.Navigator>
+        <StackApp.Screen
+          name="Login"
+          component={LoginStack}
+          options={() => ({headerShown: false})}
+        />
+      </StackApp.Navigator>
+    </NavigationContainer>
   );
 };
+const mapStateToProps = state => {
+  return {
+    isLogged: state.isLogged.login,
+  };
+};
 
-export default App;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+export default connect(
+  mapStateToProps,
+  null,
+)(App);

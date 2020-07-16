@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   Text,
@@ -7,8 +7,10 @@ import {
   Dimensions,
   StyleSheet,
   TouchableOpacity,
+  Button,
 } from 'react-native';
 import firebase from 'firebase';
+import ImagePicker from 'react-native-image-picker';
 import CustomHeader from '../../Components/CustomHeader';
 const ww = Dimensions.get('window').width;
 const hh = Dimensions.get('window').height;
@@ -20,11 +22,42 @@ const Profile = ({navigation}) => {
   const [Name, setName] = useState(User.displayName);
   const [photo, setPhoto] = useState(User.photoURL);
   const [email, setEmail] = useState(User.email);
-  const [result, setresult] = useState('');
+  const [photo1, setphoto1] = useState();
 
   // const result1 = data.find(({Email}) => Email === email);
   //       setresult(result1);
   //       console.log(result1);
+
+  const UploadImage = () => {
+    firebase
+      .storage()
+      .ref('Chatme/' + User.uid)
+      .put(photo);
+  };
+
+  const options = {
+    title: 'Select Avatar',
+    customButtons: [{name: 'fb', title: 'Choose Photo from Facebook'}],
+    storageOptions: {
+      skipBackup: true,
+      path: 'images',
+    },
+  };
+  const GetPic = () => {
+    ImagePicker.showImagePicker(options, response => {
+      console.log('Response = ', response);
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        const source = {uri: response.uri};
+        setphoto1(source);
+      }
+    });
+  };
 
   const UpdateProfile = () => {
     User.updateProfile({
@@ -47,6 +80,9 @@ const Profile = ({navigation}) => {
           source={{uri: photo}}
           style={{height: ww / 3, width: ww / 3, marginLeft: 10, margin: 10}}
         />
+        <Image source={photo1} style={{height: 100, width: 100}} />
+
+        <Button title="Change Profile Image" onPress={() => GetPic()} />
         <Text style={{margin: 10, color: 'red'}}>Username:</Text>
         <TextInput
           style={styles.TextInputStyle}

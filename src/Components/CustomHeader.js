@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
-import firebase from 'firebase';
 
 const CustomHeader = ({title, isHome, navigation, img}) => {
   return (

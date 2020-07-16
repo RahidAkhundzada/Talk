@@ -50,7 +50,7 @@ const Users = ({navigation}) => {
   }, [SearchbyName, data, text]);
 
   const SearchbyName = useCallback(text => {
-    const newData = data.filter(function(item) {
+    const newData = data.filter(item => {
       const itemData = item.Name ? item.Name.toUpperCase() : ''.toUpperCase();
       const textData = text.toUpperCase();
       return itemData.indexOf(textData) > -1;
@@ -58,6 +58,7 @@ const Users = ({navigation}) => {
     setdataSource(newData);
     setText(text);
   });
+ 
 
   const TalkOnetoOne = () => {
     const result = data.find(({Email}) => Email === email);

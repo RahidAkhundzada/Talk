@@ -8,9 +8,11 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  Keyboard,
 } from 'react-native';
 import firebase from 'firebase';
-import {Keyboard} from 'react-native';
+import {connect} from 'react-redux';
+import {isLogged} from '../../Redux/Action/ActionLogin';
 const config = {
   apiKey: 'AIzaSyA_Uup35k_gYb5pjY93_Wqzch8vSXPjDLc',
   authDomain: 'login-db311.firebaseapp.com',
@@ -25,7 +27,7 @@ if (!firebase.apps.length) {
   firebase.initializeApp(config);
 }
 
-const Login = ({navigation}) => {
+const Login = ({isLogged, navigation}) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
 
@@ -34,10 +36,10 @@ const Login = ({navigation}) => {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(() => navigation.navigate('DrawerNavigation'))
+      .then(isLogged(true))
       .catch(loginFail);
   };
-
+  //.then(() => navigation.navigate('DrawerNavigation'))
   const loginFail = () => {
     alert('Username or Password is wrong');
   };
@@ -98,7 +100,19 @@ const Login = ({navigation}) => {
     </KeyboardAvoidingView>
   );
 };
-export default Login;
+
+const mapDispatchToProps = dispatch => {
+  return {
+    isLogged: value => {
+      dispatch(isLogged(value));
+    },
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(Login);
 
 const styles = StyleSheet.create({
   container: {
